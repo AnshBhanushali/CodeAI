@@ -23,8 +23,8 @@ function createHintBox() {
     max-width: 320px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     white-space: pre-wrap;
-    cursor: move;
     user-select: none;
+    cursor: grab;
   `;
 
   const header = document.createElement("div");
@@ -32,7 +32,6 @@ function createHintBox() {
   header.style.cssText = `
     font-weight: bold;
     margin-bottom: 8px;
-    cursor: move;
   `;
 
   const hintText = document.createElement("div");
@@ -66,16 +65,17 @@ function createHintBox() {
   box.appendChild(nextBtn);
   document.body.appendChild(box);
 
-  // DRAGGABLE LOGIC
-  let isDragging = false;
+  // === FIXED DRAGGABLE LOGIC ===
   let offsetX = 0;
   let offsetY = 0;
+  let isDragging = false;
 
-  header.addEventListener('mousedown', (e) => {
+  box.addEventListener('mousedown', (e) => {
     isDragging = true;
     offsetX = e.clientX - box.getBoundingClientRect().left;
     offsetY = e.clientY - box.getBoundingClientRect().top;
     box.style.cursor = 'grabbing';
+    e.preventDefault(); // prevent text selection
   });
 
   document.addEventListener('mousemove', (e) => {
@@ -87,7 +87,7 @@ function createHintBox() {
 
   document.addEventListener('mouseup', () => {
     isDragging = false;
-    box.style.cursor = 'move';
+    box.style.cursor = 'grab';
   });
 }
 
