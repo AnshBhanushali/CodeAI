@@ -28,7 +28,7 @@ const problemContext = `Problem Title: ${problemTitle}\nProblem Description: ${p
 
 // ✅ Create prompt list:
 const prompts = [
-  `${problemContext} Explain this LeetCode problem in simple terms, its requirements and also explain what is the time and space complexity and why`,
+  `${problemContext} Act as senior level software developer, interviewing at Google. Now, explain this LeetCode problem in simple terms, its requirements and also explain what is the time and space complexity and why`,
   `${problemContext} Explain the brute force approach for this problem and aslo the detailed approach to solve using brute force while telling its time and space complexity and then explain its limitations.`,
   `${problemContext} Explain which pattern would best suite here for example leetcode has patterns like sliding window, or prefix sum or two sum, tell which pattern would be most optimal.`,
   `${problemContext} Explain the optimized and best approach for this problem and give the step by step explanation on how to solve it with time and space compexities.`,
