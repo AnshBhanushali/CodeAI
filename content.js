@@ -1,31 +1,38 @@
 let currentHintIndex = 0;
 let hints = [
-  "Step 1: This problem likely requires O(n) time and O(1) space.",
-  "Step 2: A brute force approach checks all pairs → O(n^2) time.",
-  "Step 3: You can optimize using a hash map → O(n) time complexity.",
-  "Step 4: If array is sorted, consider using two pointers or sliding window.",
-  "Step 5: Build your solution by initializing a map and iterating once."
+  "📝 Step 1: Time complexity: O(n), space: O(1).",
+  "💭 Step 2: Brute force approach checks all pairs → O(n^2).",
+  "🚀 Step 3: Optimize with hash map for O(n).",
+  "🔍 Step 4: Try sliding window for substring problems.",
+  "✅ Step 5: Code with hash set to track seen characters."
 ];
 
-// Create the hint box with next button
 function createHintBox() {
   const box = document.createElement("div");
   box.id = "leetcode-helper-hint-box";
   box.style.cssText = `
     position: fixed;
-    bottom: 60px;
-    right: 20px;
-    background: rgba(0,0,0,0.9);
+    top: 100px;
+    left: 100px;
+    background: rgba(0,0,0,0.7);
     color: white;
-    padding: 14px 18px;
+    padding: 12px 18px;
     border-radius: 10px;
     font-size: 14px;
     z-index: 9999;
     max-width: 320px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     white-space: pre-wrap;
-    display: none;
-    font-family: sans-serif;
+    cursor: move;
+    user-select: none;
+  `;
+
+  const header = document.createElement("div");
+  header.innerText = "💡 LeetCode Helper";
+  header.style.cssText = `
+    font-weight: bold;
+    margin-bottom: 8px;
+    cursor: move;
   `;
 
   const hintText = document.createElement("div");
@@ -54,10 +61,34 @@ function createHintBox() {
     }
   };
 
+  box.appendChild(header);
   box.appendChild(hintText);
   box.appendChild(nextBtn);
-
   document.body.appendChild(box);
+
+  // DRAGGABLE LOGIC
+  let isDragging = false;
+  let offsetX = 0;
+  let offsetY = 0;
+
+  header.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    offsetX = e.clientX - box.getBoundingClientRect().left;
+    offsetY = e.clientY - box.getBoundingClientRect().top;
+    box.style.cursor = 'grabbing';
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (isDragging) {
+      box.style.left = `${e.clientX - offsetX}px`;
+      box.style.top = `${e.clientY - offsetY}px`;
+    }
+  });
+
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+    box.style.cursor = 'move';
+  });
 }
 
 function toggleHintBox() {
@@ -66,10 +97,8 @@ function toggleHintBox() {
   box.style.display = (box.style.display === "none") ? "block" : "none";
 }
 
-// Create box when page loads
 createHintBox();
 
-// Hotkey: Ctrl + Shift + H → toggle visibility
 document.addEventListener("keydown", (e) => {
   if (e.ctrlKey && e.shiftKey && e.key.toUpperCase() === "H") {
     toggleHintBox();
