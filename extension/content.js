@@ -1,16 +1,10 @@
 let currentHintIndex = 0;
-let lastCodeSent = "";
-let feedbackDisplayed = false;
-
-const problemTitleSelector = document.querySelector('.css-v3d350');
-const problemTitle = problemTitleSelector ? problemTitleSelector.innerText : "Unknown LeetCode Problem";
-
 const prompts = [
-  `Explain the LeetCode problem "${problemTitle}" in simple terms including what it asks, input/output, and constraints.`,
-  `Explain the time and space complexity constraints for "${problemTitle}" and why they are set this way.`,
-  `Explain the brute force approach for "${problemTitle}" with pros and cons.`,
-  `Explain the optimal approach for "${problemTitle}" including which pattern (e.g., sliding window, DP) applies and why.`,
-  `Generate a coding plan to solve "${problemTitle}" step-by-step.`
+  "Explain this LeetCode problem in simple terms and its time and space constraints.",
+  "Explain the brute force approach for this problem and its limitations.",
+  "Explain the optimized approach for this problem and why it works better.",
+  "Explain if sliding window or any pattern applies here.",
+  "Explain coding plan step-by-step for implementation."
 ];
 
 function createHintBox() {
@@ -20,13 +14,13 @@ function createHintBox() {
     position: fixed;
     top: 100px;
     left: 100px;
-    background: rgba(0,0,0,0.9);
+    background: rgba(0,0,0,0.8);
     color: white;
     padding: 12px 18px;
     border-radius: 10px;
     font-size: 14px;
     z-index: 9999;
-    max-width: 340px;
+    max-width: 320px;
     cursor: grab;
     user-select: none;
   `;
@@ -37,10 +31,10 @@ function createHintBox() {
 
   const hintText = document.createElement("div");
   hintText.id = "hint-text";
-  hintText.innerText = "Click Next to load explanation.";
+  hintText.innerText = "Click Next to load hint.";
 
   const nextBtn = document.createElement("button");
-  nextBtn.innerText = "Next Explanation";
+  nextBtn.innerText = "Next Hint";
   nextBtn.style.cssText = `
     margin-top: 10px;
     padding: 6px 12px;
@@ -53,12 +47,11 @@ function createHintBox() {
 
   nextBtn.onclick = async () => {
     if (currentHintIndex >= prompts.length) {
-      hintText.innerText = "✅ All explanations complete. Writing code monitoring started!";
+      hintText.innerText = "✅ All hints completed.";
       nextBtn.disabled = true;
-      startCodeMonitoring();
       return;
     }
-    hintText.innerText = "⏳ Loading explanation...";
+    hintText.innerText = "⏳ Loading...";
     const hint = await fetch(`http://localhost:3000/api/generate-hint`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -92,33 +85,6 @@ function createHintBox() {
     isDragging = false;
     box.style.cursor = 'grab';
   });
-}
-
-function getCurrentEditorCode() {
-  const codeArea = document.querySelector('textarea'); // fallback
-  const codeMirror = document.querySelector('.view-lines');
-  if (codeMirror) {
-    const lines = [...codeMirror.querySelectorAll('.view-line')].map(line => line.innerText);
-    return lines.join('\n');
-  } else if (codeArea) {
-    return codeArea.value;
-  }
-  return '';
-}
-
-function startCodeMonitoring() {
-  setInterval(async () => {
-    const code = getCurrentEditorCode();
-    if (code && code !== lastCodeSent) {
-      lastCodeSent = code;
-      const feedback = await fetch(`http://localhost:3000/api/review-code`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code, problemTitle })
-      }).then(res => res.json()).then(data => data.feedback);
-      document.getElementById('hint-text').innerText = `📝 Feedback:\n${feedback}`;
-    }
-  }, 5000); 
 }
 
 createHintBox();
