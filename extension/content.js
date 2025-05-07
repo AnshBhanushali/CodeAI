@@ -1,12 +1,32 @@
 let currentHintIndex = 0;
 
-// 🏆 ✅ SCRAPE problem title + description dynamically:
-const problemTitle = document.querySelector('div[data-cy="question-title"]')?.innerText ?? "Unknown Problem";
-const problemDescription = document.querySelector('.content__u3I1.question-content__JfgR')?.innerText ?? "";
+// ✅ Grab title from DOM if possible
+let problemTitle = document.querySelector('div[data-cy="question-title"]')?.innerText;
 
-const problemContext = `Problem Title: ${problemTitle}\nProblem Description: ${problemDescription}\n`;
+// ✅ If not found → extract from URL slug:
+if (!problemTitle) {
+  const urlParts = window.location.pathname.split('/');
+  const slug = urlParts.includes('problems') ? urlParts[urlParts.indexOf('problems') + 1] : 'unknown-problem';
+  problemTitle = slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
 
-// Now create prompts INCLUDING problem context:
+// ✅ Try multiple selectors for description
+const descriptionContainer =
+  document.querySelector('.content__u3I1.question-content__JfgR') ||
+  document.querySelector('.content__u3I1') ||
+  document.querySelector('.question-content__JfgR') ||
+  document.querySelector('.description__24sA') ||
+  document.querySelector('[data-cy="description-content"]');
+
+const descriptionParagraphs = descriptionContainer?.querySelectorAll('p');
+const problemDescription = descriptionParagraphs
+  ? Array.from(descriptionParagraphs).map(p => p.innerText).join('\n')
+  : (descriptionContainer?.innerText.trim() ?? "");
+
+// ✅ Combine context:
+const problemContext = `Problem Title: ${problemTitle}\nProblem Description: ${problemDescription}\nURL: ${window.location.href}\n`;
+
+// ✅ Create prompt list:
 const prompts = [
   `${problemContext} Explain this LeetCode problem in simple terms and its time and space constraints.`,
   `${problemContext} Explain the brute force approach for this problem and its limitations.`,
@@ -60,12 +80,18 @@ function createHintBox() {
       return;
     }
     hintText.innerText = "⏳ Loading...";
-    const hint = await fetch(`https://a4be-2603-6010-5300-4021-f52e-1854-2875-e5a1.ngrok-free.app/api/generate-hint`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt: prompts[currentHintIndex] })
-    }).then(res => res.json()).then(data => data.hint);
-    hintText.innerText = hint;
+    try {
+      const response = await fetch(`https://a4be-2603-6010-5300-4021-f52e-1854-2875-e5a1.ngrok-free.app/api/generate-hint`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: prompts[currentHintIndex] })
+      });
+      const data = await response.json();
+      hintText.innerText = data.hint ?? "No hint generated.";
+    } catch (err) {
+      console.error(err);
+      hintText.innerText = "❌ Error loading hint.";
+    }
     currentHintIndex++;
   };
 
