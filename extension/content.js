@@ -1,10 +1,18 @@
 let currentHintIndex = 0;
+
+// 🏆 ✅ SCRAPE problem title + description dynamically:
+const problemTitle = document.querySelector('div[data-cy="question-title"]')?.innerText ?? "Unknown Problem";
+const problemDescription = document.querySelector('.content__u3I1.question-content__JfgR')?.innerText ?? "";
+
+const problemContext = `Problem Title: ${problemTitle}\nProblem Description: ${problemDescription}\n`;
+
+// Now create prompts INCLUDING problem context:
 const prompts = [
-  "Explain this LeetCode problem in simple terms and its time and space constraints.",
-  "Explain the brute force approach for this problem and its limitations.",
-  "Explain the optimized approach for this problem and why it works better.",
-  "Explain if sliding window or any pattern applies here.",
-  "Explain coding plan step-by-step for implementation."
+  `${problemContext} Explain this LeetCode problem in simple terms and its time and space constraints.`,
+  `${problemContext} Explain the brute force approach for this problem and its limitations.`,
+  `${problemContext} Explain the optimized approach for this problem and why it works better.`,
+  `${problemContext} Explain if sliding window or any pattern applies here.`,
+  `${problemContext} Explain coding plan step-by-step for implementation.`
 ];
 
 function createHintBox() {
@@ -53,7 +61,6 @@ function createHintBox() {
     }
     hintText.innerText = "⏳ Loading...";
     const hint = await fetch(`https://a4be-2603-6010-5300-4021-f52e-1854-2875-e5a1.ngrok-free.app/api/generate-hint`, {
-
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt: prompts[currentHintIndex] })
