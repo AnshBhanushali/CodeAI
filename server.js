@@ -1,11 +1,21 @@
 const express = require('express');
+const cors = require('cors'); // ✅ ADD THIS
 const fetch = (...args) => import('node-fetch').then(module => module.default(...args));
-
 require('dotenv').config();
 
 const app = express();
 const PORT = 3000;
 
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'https://YOUR-NGROK-URL.ngrok-free.app');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    if (req.method === 'OPTIONS') {
+      return res.sendStatus(200); // respond to preflight
+    }
+    next();
+  });
+  
 app.use(express.json());
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
