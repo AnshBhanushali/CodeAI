@@ -81,7 +81,7 @@ function createHintBox() {
     }
     hintText.innerText = "⏳ Loading...";
     try {
-      const response = await fetch(`https://a4be-2603-6010-5300-4021-f52e-1854-2875-e5a1.ngrok-free.app/api/generate-hint`, {
+      const response = await fetch(`https://1eea-2603-6010-5300-4021-f52e-1854-2875-e5a1.ngrok-free.app/api/generate-hint`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: prompts[currentHintIndex] })
