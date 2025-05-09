@@ -1,7 +1,3 @@
-Absolutely Ansh! Here’s your README cleaned up, more professional, **nicely formatted for GitHub**, but keeping *only what you wrote* → no extra info:
-
----
-
 # CodeAI 💡 — AI-powered Problem Solving Coding Assistant
 
 Welcome to **CodeAI**, an AI-driven coding assistant that integrates directly into LeetCode to provide step-by-step explanations, hints, and coding plans for any problem — all while you're solving it!
