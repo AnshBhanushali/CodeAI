@@ -48,8 +48,8 @@ Welcome to **CodeAI**, an AI-driven coding assistant that integrates directly in
 1️⃣ **Clone this repository:**
 
 ```bash
-git clone https://github.com/anshbhanushali/codeAI.git
-cd codeAI
+git clone https://github.com/anshbhanushali/CodeAI.git
+cd CodeAI
 ```
 
 2️⃣ **Install dependencies:**
