@@ -86,7 +86,6 @@ const response = await fetch('https://xxxx.ngrok-free.app/api/generate-hint', { 
 * Enable **Developer Mode**
 * Click **Load unpacked**
 * Select the `/codeAI` folder
-* Navigate to [https://leetcode.com](https://leetcode.com) and open a problem
 * You should see the **💡 CodeAI Helper** draggable box!
 
 ---
